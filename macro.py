@@ -16,6 +16,8 @@ stop = False
 state = "list"
 scroll_page = 0
 visited = set()
+last_fight_row = None
+last_scroll_at = 0
 last_action = 0
 fight_start = 0
 
@@ -91,6 +93,7 @@ while not stop:
             pg.moveTo(int(w * .8), int(h * .65))
             pg.scroll(-4)
             scroll_page += 1
+            print("Scrolling past completed or unavailable bosses; page", scroll_page, flush=True)
             last_action = now
             if scroll_page >= 20:
                 pg.scroll(100)

@@ -1,12 +1,9 @@
-# Roblox Boss Grinder (experimental)
+# Boss Grinder (experimental)
 
-Windows screen-based macro. **F6** starts/pauses, **F7** stops. Moving the cursor to the top-left triggers PyAutoGUI's emergency stop.
+F6 = start/pause, F7 = stop. Move mouse to top-left to trigger PyAutoGUI emergency stop.
 
-## Install
-1. Install Python 3.11+ on Windows.
-2. In Command Prompt run: `pip install -r requirements.txt`
-3. Open Roblox at a fixed window size on the **BOSSES** page.
-4. Run: `python macro.py`
+Install: `py -m pip install -r requirements.txt`. Run: `py macro.py`.
 
-## Important
-This is an **experimental starter**, not a finished unattended bot. It detects gold buttons by their color, so other gold UI elements may cause false clicks. It attacks and scrolls, but **does not yet verify the BOSS DEFEATED text or click LEAVE**; it pauses when the attack button disappears. A future version can use calibrated image templates for reliable victory detection and leaving. Keep it supervised, and check the game's automation rules.
+**Important: You need two image templates from your own screen for full automation.** Crop a small screenshot tightly around the **BOSS DEFEATED** label, save as `victory.png`, and crop around the **LEAVE** button, save as `leave.png`. Put both next to `macro.py`. Without these, the script cannot recognize victory or leave.
+
+Keep the game visible at a fixed resolution. It scans yellow buttons on the right side of the boss list from top to bottom, remembers rows on each scroll page, skips non-yellow buttons, and scrolls down to find more. After 20 scroll increments it resets to the top. The image/color thresholds are approximate and may need calibration for your game's layout. Test supervised; don't assume every click is correct. Check the game's rules on automation.

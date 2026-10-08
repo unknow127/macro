@@ -52,14 +52,14 @@ def locate_template(frame, filename, threshold=0.82):
 
 def yellow_rectangles(frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv, (15, 95, 120), (38, 255, 255))
+    mask = cv2.inRange(hsv, (12, 65, 100), (43, 255, 255))
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     h, w = frame.shape[:2]
     boxes = []
     for c in contours:
         x, y, bw, bh = cv2.boundingRect(c)
-        if bw >= 85 and bh >= 22 and 1.7 <= bw / bh <= 8 and x > w * .15 and y > h * .15:
+        if bw >= 55 and bh >= 17 and 1.4 <= bw / bh <= 10 and x > w * .15 and y > h * .12:
             boxes.append((x, y, bw, bh))
     return sorted(boxes, key=lambda b: b[1])
 
@@ -79,11 +79,14 @@ while not stop:
     if state == "list":
         # Only the right-hand side of the boss list, excluding page header/footer.
         fights = [b for b in yellow_rectangles(frame)
-                  if b[0] > w * .53 and h * .22 < b[1] < h * .89]
+                  if b[0] > w * .38 and h * .17 < b[1] < h * .93]
         available = [b for b in fights if (scroll_page, round(b[1] / 35)) not in visited]
+        if now - last_action > 2:
+            print("Yellow candidates:", len(fights), "unvisited:", len(available), flush=True)
         if available:
             b = available[0]
             visited.add((scroll_page, round(b[1] / 35)))
+            print("Clicking candidate at", center(b), "size", (b[2], b[3]), flush=True)
             pg.click(*center(b))
             print("Entered boss at row", b[1], flush=True)
             state = "fight"
